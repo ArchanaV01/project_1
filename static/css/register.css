@@ -1,0 +1,32 @@
+body {
+    background: url(../images/books.jpg) no-repeat;
+}
+header{
+    
+    color: white;
+    padding-top: 30px;
+    min-height: 70px;
+    text-align: center;
+    /* border-bottom: chocolate 3px solid; */
+}
+
+.container{
+    width: 300px;
+    margin-top: 50px;
+    overflow: hidden;
+    float: center;
+}
+
+#register_form{
+    border: chocolate 3px solid;
+    padding: 15px;
+    align-items: center;
+    background-color: rgb(78, 53, 32);
+    
+}
+
+input, button{
+    float: center;
+    /* color: rgb(78, 53, 32); */
+    margin: 20px 20px 20px 20px;
+}

@@ -1,0 +1,16 @@
+body {
+    background: url(../images/books.jpg) no-repeat;
+}
+
+header {
+    color: white;
+    padding-top: 30px;
+    min-height: 70px;
+    text-align: center;
+    
+}
+
+h1{
+    color: white;
+}
+

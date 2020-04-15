@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>
+            User Register
+        </title>
+        <meta name = "viewport" content = "width=device-width">
+        <link rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel = "stylesheet" href = "{{url_for('static',filename='css/register.css')}}">
+    </head>
+    <body>
+        <header>
+            <h1>Welcome to BookViewer</h1><br>
+            <h3>Not a user?</h3><br>
+            <h3>Register Yourself</h3>
+        </header>
+        <section class = "container">
+            <form id = "register_form" action="{{url_for('register')}}" method="POST">
+                <input type="text" name="name" placeholder="User Name"><br>
+                <input type="password" name="password" placeholder="Password"><br>
+                <button type = "submit" class = "button_1">Register</button>
+            </form>
+        </section>
+    </body>
+</html>
