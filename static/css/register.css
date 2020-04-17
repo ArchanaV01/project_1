@@ -11,19 +11,23 @@ header{
 }
 
 .container{
-    width: 300px;
+    color: white;
+    width: 400px;
     margin-top: 50px;
     overflow: hidden;
     float: center;
+    text-align: center;
 }
 
+
 #register_form{
+    align-items: center;
     border: chocolate 3px solid;
     padding: 15px;
-    align-items: center;
+    float: center;
     background-color: rgb(78, 53, 32);
-    
 }
+
 
 input, button{
     float: center;

@@ -1,6 +1,7 @@
 import os
+import re
 
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -23,11 +24,39 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return render_template("register.html")
+    return render_template("index.html")
 
-@app.route("/register", methods = ["POST", "GET"])
+
+@app.route("/register", methods=["POST", "GET"])
 def register():
-    name = request.form.get("name")
-    password = request.form.get("password")
-    print(name, "  ", password)
-    return render_template("index.html", name=name)
+    if request.method == "GET":
+        return render_template("register.html", name="")
+    if request.method == "POST":
+        name = request.form.get("name")
+        password = request.form.get("password")
+        # checking for empty credentials
+        if (name == "" or password == ""):
+            error = 'Invalid credentials'
+            return render_template('register.html', error=error, name="")
+        # checking for password strength
+        if not isStrong(password):
+            error = 'Weak Password'
+            return render_template('register.html', error=error, name="")
+        print(name, "  ", password)
+        return render_template("register.html", name=name)
+
+
+def isStrong(password):
+    '''Checks the password strength'''
+    if (len(password) < 6):
+        return False
+    elif not re.search("[a-z]", password):
+        return False
+    elif not re.search("[A-Z]", password):
+        return False
+    elif not re.search("[0-9]", password):
+        return False
+    elif not re.search("[_@$]", password):
+        return False
+    else:
+        return True
