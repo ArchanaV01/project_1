@@ -49,6 +49,13 @@ def register():
             error = 'Weak Password'
             return render_template('register.html', error=error, name="")
         print(name, "  ", password)
+        user = User(name = name, password = password)
+        db.session.add(user)
+        db.session.commit()
+        print("printing the database")
+        users = User.query.all()
+        for user in users:
+            print(user.name, user.password)
         return render_template("register.html", name=name)
 
 
