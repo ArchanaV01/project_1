@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 
 from flask import Flask, session, render_template, request, redirect
 from schema import *
@@ -32,6 +33,11 @@ with app.app_context():
 def index():
     return render_template("index.html")
 
+@app.route("/admin")
+def admin():
+    users = User.query.all()
+    return render_template("admin.html", list = users)
+
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -55,7 +61,7 @@ def register():
         print("printing the database")
         users = User.query.all()
         for user in users:
-            print(user.name, user.password)
+            print(user.name, user.password, user.created_at)
         return render_template("register.html", name=name)
 
 

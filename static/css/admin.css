@@ -1,0 +1,37 @@
+body {
+    background: url(../images/books.jpg) no-repeat;
+    color: white;
+}
+
+header {
+    color: white;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    min-height: 70px;
+    text-align: center;
+    background-color: rgb(56, 0, 0);
+    margin-bottom: auto;
+}
+
+#centerSection{
+    float: center;
+    margin: 40px;
+}
+
+#userList{
+    /* margin: 100px 100px 100px 100px; */
+    padding: 20px 20px 20px 20px;
+    background-color: rgb(218, 181, 181);
+    border: 2px solid rgb(219, 181, 11);
+    color: rgb(49, 4, 4);
+    float: center;
+    text-size-adjust: auto;
+}
+tr, th, td{
+    padding: 20px 20px 20px 20px;
+    border: 2px solid rgb(216, 13, 13)
+}
+
+/* h3{
+    color: white;
+} */

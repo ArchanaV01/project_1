@@ -1,13 +1,15 @@
 body {
     background: url(../images/books.jpg) no-repeat;
+    color: white;
 }
-header{
-    
+
+header {
     color: white;
     padding-top: 30px;
     min-height: 70px;
     text-align: center;
-    /* border-bottom: chocolate 3px solid; */
+    background-color: rgb(56, 0, 0);
+    margin-bottom: auto;
 }
 
 .container{
