@@ -19,7 +19,7 @@
         <h3>Not a user?</h3><br>
         <h3>Register Yourself</h3>
         <!-- Invalid Credentials - Alert Message -->
-        {%if error == 'Invalid credentials'%}
+        {%if error == 'Empty credentials'%}
         <div class="alert alert-danger" role="alert">
             Name and password shouldn't be empty!!
         </div>
@@ -38,12 +38,21 @@
             </ul>
         </div>
         {%endif%}
+        {%if error == 'Invalid credentials'%}
+        <div class="alert alert-danger" role="alert">
+            <p>Invalid credentials. If new user please register.</p>
+        </div>
+        {%endif%}
         <!-- Form for user registration -->
         <form id="register_form" action="{{url_for('register')}}" method="POST">
             <input type="text" name="name" placeholder="User Name"><br>
             <input type="password" name="password" placeholder="Password"><br>
             <button type="submit" class="button_1">Register</button>
+            <button type="submit" formaction  = "{{url_for('is_authorised')}}" class="button_1 ">Login</button>
         </form>
+        <!-- <form id="login_form" action="{{url_for('is_authorised')}}" method="POST">
+            <button type="submit" class="button_1">Login</button>
+        </form> -->
     </section>
     {%else%}
     <section class="container">

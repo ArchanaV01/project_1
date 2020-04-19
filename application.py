@@ -20,6 +20,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 # Set up database
 # engine = create_engine(os.getenv("DATABASE_URL"))
 # db = scoped_session(sessionmaker(bind=engine))
@@ -44,11 +45,15 @@ def register():
     if request.method == "GET":
         return render_template("register.html", name="")
     if request.method == "POST":
+        if (request.form('logout_button') == 'logout_now'):
+            session.pop("USERNAME", None)
+            session.pop("logged_in", None)
+            return render_template("register.html", name="")
         name = request.form.get("name")
         password = request.form.get("password")
         # checking for empty credentials
         if (name == "" or password == ""):
-            error = 'Invalid credentials'
+            error = 'Empty credentials'
             return render_template('register.html', error=error, name="")
         # checking for password strength
         if not isStrong(password):
@@ -79,3 +84,23 @@ def isStrong(password):
         return False
     else:
         return True
+
+@app.route("/auth", methods=["POST", "GET"])
+def is_authorised():
+    if request.method == "POST":
+        name = request.form.get("name")
+        password = request.form.get("password")
+        # checking for empty credentials
+        if (name == "" or password == ""):
+            error = 'Empty credentials'
+            return render_template('register.html', error=error, name="")
+        user = User.query.get(name)
+        if (user == None or user.password != password):
+            error = "Invalid credentials"
+            return render_template('register.html', error=error, name="")
+        else:
+            session['logged_in'] = True
+            session["USERNAME"] = user
+            return render_template('user_home.html', name = user.name)
+    if request.method == "GET":
+        return render_template('register.html',name = "") 
