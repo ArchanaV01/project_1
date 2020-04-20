@@ -30,43 +30,49 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
 @app.route("/admin")
 def admin():
-    users = User.query.all()
-    return render_template("admin.html", list = users)
+    users = User.query.order_by(User.created_at.desc())
+    return render_template("admin.html", list=users)
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == "GET":
-        return render_template("register.html", name="")
+        return render_template("register.html")
     if request.method == "POST":
-        if (request.form('logout_button') == 'logout_now'):
-            session.pop("USERNAME", None)
-            session.pop("logged_in", None)
-            return render_template("register.html", name="")
         name = request.form.get("name")
         password = request.form.get("password")
+        print(name, "  ", password)
+
+        # checking for already existing user
+        user = User.query.get(name)
+        print(user)
+        if user != None:
+            print("existing user")
+            error = "Already Existing User"
+            return render_template("register.html", error=error)
+
         # checking for empty credentials
         if (name == "" or password == ""):
             error = 'Empty credentials'
-            return render_template('register.html', error=error, name="")
+            return render_template('register.html', error=error)
+
         # checking for password strength
         if not isStrong(password):
             error = 'Weak Password'
-            return render_template('register.html', error=error, name="")
-        print(name, "  ", password)
-        user = User(name = name, password = password)
+            return render_template('register.html', error=error)
+
+        # checked all the possible errors, finally adding the user
+        user = User(name=name, password=password)
         db.session.add(user)
         db.session.commit()
-        print("printing the database")
-        users = User.query.all()
-        for user in users:
-            print(user.name, user.password, user.created_at)
         return render_template("register.html", name=name)
 
 
@@ -85,6 +91,7 @@ def isStrong(password):
     else:
         return True
 
+
 @app.route("/auth", methods=["POST", "GET"])
 def is_authorised():
     if request.method == "POST":
@@ -93,14 +100,26 @@ def is_authorised():
         # checking for empty credentials
         if (name == "" or password == ""):
             error = 'Empty credentials'
-            return render_template('register.html', error=error, name="")
+            return render_template('register.html', error=error)
+
+        # checking if regsitered and if so checking the password
         user = User.query.get(name)
         if (user == None or user.password != password):
             error = "Invalid credentials"
-            return render_template('register.html', error=error, name="")
+            return render_template('register.html', error=error)
         else:
             session['logged_in'] = True
             session["USERNAME"] = user
-            return render_template('user_home.html', name = user.name)
+            return render_template('user_home.html', name=user.name)
+    # redirecting to register page if /auth is directly accessed
     if request.method == "GET":
-        return render_template('register.html',name = "") 
+        return render_template('register.html')
+
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    if request.method == "POST":
+        if (request.form('logout_button') == 'logout_now'):
+            session.pop("USERNAME", None)
+            session.pop("logged_in", None)
+            return render_template("register.html")

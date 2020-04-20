@@ -14,11 +14,12 @@
     <header>
         <h1>Welcome to BookViewer</h1><br>
     </header>
-    {%if name == "" %}
+    
     <section class="container">
         <h3>Not a user?</h3><br>
         <h3>Register Yourself</h3>
         <!-- Invalid Credentials - Alert Message -->
+        {%if error is defined%}
         {%if error == 'Empty credentials'%}
         <div class="alert alert-danger" role="alert">
             Name and password shouldn't be empty!!
@@ -43,22 +44,26 @@
             <p>Invalid credentials. If new user please register.</p>
         </div>
         {%endif%}
+        {%if error == 'Already Existing User'%}
+        <div class="alert alert-danger" role="alert">
+            <p>User Name already existing, please provide other name</p>
+        </div>
+        {%endif%}
+        {%endif%}
+        {%if name is defined %}
+        <section class="container">
+            <h3>Hi {{name}}, You are registered successfully!! Try logging in...</h3>
+        </section>
+        {%endif%}
         <!-- Form for user registration -->
         <form id="register_form" action="{{url_for('register')}}" method="POST">
             <input type="text" name="name" placeholder="User Name"><br>
             <input type="password" name="password" placeholder="Password"><br>
             <button type="submit" class="button_1">Register</button>
-            <button type="submit" formaction  = "{{url_for('is_authorised')}}" class="button_1 ">Login</button>
+            <button type="submit" formaction="{{url_for('is_authorised')}}" class="button_1 ">Login</button>
         </form>
-        <!-- <form id="login_form" action="{{url_for('is_authorised')}}" method="POST">
-            <button type="submit" class="button_1">Login</button>
-        </form> -->
     </section>
-    {%else%}
-    <section class="container">
-        <h3>Hi {{name}}, You are registered successfully!!</h3>
-    </section>
-    {%endif%}
+
 </body>
 
 </html>
