@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        {{name}} Home page
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/user_home.css')}}">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to BookViewer</h1><br>
+        <form action="{{url_for('register')}}">
+            <button type="submit" class="logout_button" value="logout_now">Logout</button>
+        </form>
+        
+    </header>
+    <section>
+
+    </section>
+</body>
+</html>
