@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        User Register
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/register.css')}}">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to BookViewer</h1><br>
+    </header>
+    {%if name == "" %}
+    <section class="container">
+        <h3>Not a user?</h3><br>
+        <h3>Register Yourself</h3>
+        <!-- Invalid Credentials - Alert Message -->
+        {%if error == 'Invalid credentials'%}
+        <div class="alert alert-danger" role="alert">
+            Name and password shouldn't be empty!!
+        </div>
+        {%endif%}
+        <!-- Weak Password - Alert Message -->
+        {%if error == 'Weak Password'%}
+        <div class="alert alert-danger" role="alert">
+            Weak Password!! <br>
+            A Strong password should have the following characters: <br>
+            <ul>
+                <li>Minimum length of 6 characters</li>
+                <li>Atleast one capital letter</li>
+                <li>Atleast one small letter</li>
+                <li>Atleast one digit</li>
+                <li>Atleast one of '$', '@', '_'</li>
+            </ul>
+        </div>
+        {%endif%}
+        <!-- Form for user registration -->
+        <form id="register_form" action="{{url_for('register')}}" method="POST">
+            <input type="text" name="name" placeholder="User Name"><br>
+            <input type="password" name="password" placeholder="Password"><br>
+            <button type="submit" class="button_1">Register</button>
+        </form>
+    </section>
+    {%else%}
+    <section class="container">
+        <h3>Hi {{name}}, You are registered successfully!!</h3>
+    </section>
+    {%endif%}
+</body>
+
+</html>
