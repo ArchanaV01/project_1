@@ -14,10 +14,10 @@
     <header>
         <h1>Welcome to BookViewer</h1><br>
     </header>
-    
+
     <section class="container">
-        <h3>Not a user?</h3><br>
-        <h3>Register Yourself</h3>
+        <!-- <h3>Not a user?</h3><br> -->
+        <h3>Login</h3>
         <!-- Invalid Credentials - Alert Message -->
         {%if error is defined%}
         {%if error == 'Empty credentials'%}
@@ -29,41 +29,52 @@
         {%if error == 'Weak Password'%}
         <div class="alert alert-danger" role="alert">
             Weak Password!! <br>
-            A Strong password should have the following characters: <br>
+            <!-- A Strong password should have the following characters: <br>
             <ul>
                 <li>Minimum length of 6 characters</li>
                 <li>Atleast one capital letter</li>
                 <li>Atleast one small letter</li>
                 <li>Atleast one digit</li>
                 <li>Atleast one of '$', '@', '_'</li>
-            </ul>
+            </ul> -->
         </div>
         {%endif%}
         {%if error == 'Invalid credentials'%}
         <div class="alert alert-danger" role="alert">
-            <p>Invalid credentials. If new user please register.</p>
+            <p>Invalid credentials!! <br> If new user please register</p>
         </div>
         {%endif%}
         {%if error == 'Already Existing User'%}
         <div class="alert alert-danger" role="alert">
-            <p>User Name already existing, please provide other name</p>
+            <p>User Name already existing, please provide another name</p>
         </div>
         {%endif%}
         {%endif%}
         {%if name is defined %}
-        <section class="container">
-            <h3>Hi {{name}}, You are registered successfully!! Try logging in...</h3>
-        </section>
+        <div class="alert alert-success" role="alert">
+            <h6>Hi {{name}}, <br> Registration successful! <br> Try logging in..</h6>
+        </div>
         {%endif%}
         <!-- Form for user registration -->
         <form id="register_form" action="{{url_for('register')}}" method="POST">
-            <input type="text" name="name" placeholder="User Name"><br>
-            <input type="password" name="password" placeholder="Password"><br>
+            <input type="text" name="name" placeholder="User Name" required><br>
+            <input type="password" name="password" aria-describedby="pswdHelp" placeholder="Password"
+                title="Password length should be in between 8 and 16 with atleast one lowercase letter, one upper case letter, one digit and a special character"
+                required>
+            <!-- <input type="password" name="password" placeholder="Password" required><br> -->
             <button type="submit" class="button_1">Register</button>
             <button type="submit" formaction="{{url_for('is_authorised')}}" class="button_1 ">Login</button>
         </form>
     </section>
-
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

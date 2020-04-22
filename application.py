@@ -1,7 +1,7 @@
 import os
 import re
 from datetime import datetime
-
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, session, render_template, request, redirect
 from schema import *
 from flask_sqlalchemy import SQLAlchemy
@@ -70,7 +70,8 @@ def register():
             return render_template('register.html', error=error)
 
         # checked all the possible errors, finally adding the user
-        user = User(name=name, password=password)
+        pHash = generate_password_hash(password,"sha256")
+        user = User(name=name, password=pHash)
         db.session.add(user)
         db.session.commit()
         return render_template("register.html", name=name)
@@ -78,7 +79,7 @@ def register():
 
 def isStrong(password):
     '''Checks the password strength'''
-    if (len(password) < 6):
+    if (len(password) < 8):
         return False
     elif not re.search("[a-z]", password):
         return False
@@ -86,7 +87,7 @@ def isStrong(password):
         return False
     elif not re.search("[0-9]", password):
         return False
-    elif not re.search("[_@$]", password):
+    elif not re.search("[!@#$%^&*]", password):
         return False
     else:
         return True
@@ -104,7 +105,7 @@ def is_authorised():
 
         # checking if regsitered and if so checking the password
         user = User.query.get(name)
-        if (user == None or user.password != password):
+        if (user == None or not check_password_hash(user.password,password)):
             error = "Invalid credentials"
             return render_template('register.html', error=error)
         else:

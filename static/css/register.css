@@ -13,6 +13,7 @@ header {
 }
 
 .container{
+    border-radius: 10px;
     color: white;
     width: 400px;
     margin-top: 50px;
@@ -23,11 +24,12 @@ header {
 
 
 #register_form{
+    border-radius: 10px;
     align-items: center;
     border: chocolate 3px solid;
     padding: 15px;
     float: center;
-    background-color: rgb(78, 53, 32);
+    background-color: rgba(56, 0, 0, 0.829);
 }
 
 
