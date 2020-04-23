@@ -1,0 +1,21 @@
+body {
+    background: url(../images/books.jpg) no-repeat;
+    color: white;
+}
+
+header {
+    color: white;
+    text-align: center;
+    background-color: rgb(56, 0, 0);
+    margin-bottom: 20px;
+}
+
+/* .container{
+    width: 70%;
+    border-radius: 10px;
+    padding: 20px 20px 20px 20px;
+    background-color: rgba(56, 0, 0, 0.829);
+    color: white;
+    float: center;
+    text-align: center;
+} */
