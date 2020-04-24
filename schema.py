@@ -15,3 +15,15 @@ class Book(db.Model):
     title = db.Column(db.String, nullable = False)
     author = db.Column(db.String, nullable = False)
     year = db.Column(db.String, nullable = False)
+
+class Review(db.Model):
+    __tablename__ = "REVIEWS"
+    __table_args__ = (
+        db.PrimaryKeyConstraint('isbn', 'name'),
+        {},
+    )
+    isbn = db.Column(db.String)
+    name = db.Column(db.String)
+    review = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    createTime = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

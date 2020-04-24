@@ -110,7 +110,7 @@ def is_authorised():
             return render_template('register.html', error=error)
         else:
             session['logged_in'] = True
-            session["USERNAME"] = user
+            session["USERNAME"] = user.name
             return render_template('user_home.html', name=user.name)
     # redirecting to register page if /auth is directly accessed
     if request.method == "GET":
@@ -120,7 +120,27 @@ def is_authorised():
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
     if request.method == "POST":
-        if (request.form('logout_button') == 'logout_now'):
-            session.pop("USERNAME", None)
-            session.pop("logged_in", None)
-            return render_template("register.html")
+        session.pop("USERNAME", None)
+        session.pop("logged_in", None)
+        return render_template("register.html")
+            
+
+@app.route("/book_page/<isbn>",methods=["GET","POST"])
+def book_page(isbn):
+    if request.method == "GET":
+        #checking if user session is already present, if not redirecting to login page
+        if not 'USERNAME' in session:
+            return render_template("register.html", msg="Please login first")
+        bookDetails = Book.query.get(isbn)
+        #checking if the isbn is valid or not
+        if bookDetails is None:
+            return render_template("user_home.html", msg = "Invalid ISBN number")
+        #redirecting to the bookpage with the reviews and bookdetails
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        return  render_template("book_page.html", bookDetails = bookDetails, reviews=reviews)
+
+
+@app.route("/search")
+def search():
+    return render_template("user_home.html")
+

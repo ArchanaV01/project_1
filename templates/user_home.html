@@ -16,7 +16,7 @@
         <nav class="navbar navbar-light" style="background-color:rgb(56, 0, 0)">
             <a class="navbar-brand">BookViewer</a>
             <h4>{{name}}</h4>
-            <form action="{{url_for('register')}}">
+            <form action="{{url_for('logout')}}" method="POST">
                 <button type="submit" class="logout_button" value="logout_now">Logout</button>
             </form>
         </nav>
@@ -26,12 +26,13 @@
             <div style="width: 30%; text-align: left;">
                 <h4>Search for a book</h4>
             </div>
-            <div style="width: 30%;" >
-                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search">
+            <div style="width: 30%;">
+                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here"
+                    aria-label="Search">
             </div>
             <div style="width: 10%;">
             </div>
-            <div style="width: 15%;" >
+            <div style="width: 15%;">
                 <div class="dropdown float-none" style="width: 10%;">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,11 +48,13 @@
                     <button class="btn btn-outline-light" type="submit">Search</button>
                 </div> -->
             </div>
-            <div style="width: 15%;" >
+            <div style="width: 15%;">
                 <button class="btn btn-outline-light float-right" type="submit">Search</button>
             </div>
         </form>
+        <h3>{{ msg}}</h3>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
