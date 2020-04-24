@@ -138,4 +138,9 @@ def book_page(isbn):
         #redirecting to the bookpage with the reviews and bookdetails
         reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
         return  render_template("book_page.html", bookDetails = bookDetails, reviews=reviews)
-    
+
+
+@app.route("/search")
+def search():
+    return render_template("user_home.html")
+
