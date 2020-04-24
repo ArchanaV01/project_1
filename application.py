@@ -6,6 +6,8 @@ from flask import Flask, session, render_template, request, redirect
 from schema import *
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+from sqlalchemy.orm import class_mapper
+from sqlalchemy import and_
 # from sqlalchemy import create_engine
 # from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -123,7 +125,7 @@ def logout():
         session.pop("USERNAME", None)
         session.pop("logged_in", None)
         return render_template("register.html")
-            
+
 
 @app.route("/book_page/<isbn>",methods=["GET","POST"])
 def book_page(isbn):
@@ -138,4 +140,29 @@ def book_page(isbn):
         #redirecting to the bookpage with the reviews and bookdetails
         reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
         return  render_template("book_page.html", bookDetails = bookDetails, reviews=reviews)
-    
+    else :
+        book = Book.query.get(isbn)
+        try:
+            rating = request.form["star"]
+        except:
+            rating = 0
+        review = request.form["review"]
+        name = session['USERNAME']
+        #creating a review object
+        user = Review(isbn=isbn, name=name, review=review, rating=rating)
+        check = Review.query.filter(and_(Review.name==name, Review.isbn==isbn)).all()
+        #checking whether the user has already reviewed the book
+        if not check :
+            #adding the user's review to the data base
+            db.session.add(user)
+            db.session.commit()
+            reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+            return render_template("book_page.html", bookDetails=book, reviews=reviews)
+        else:
+            #throwing an error saying that the user had already provided the review
+            error = "duplicate review"
+            reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+            return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
+
+
+

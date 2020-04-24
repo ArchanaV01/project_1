@@ -2,9 +2,10 @@
 <html>
 
 <head>
-    <title>Prasanna Saripudi</title>
+    <title>Book Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.1.0/darkly/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{url_for('static',filename='css/book_page.css')}}">
 </head>
 
@@ -38,29 +39,34 @@
         <h3>Give your rating, review here...</h3>
         <form method="POST" class="form-border">
             <div class="form-row">
-                <div class="form-group col-sm-2">
-                    <select id="rating" name="rating" class="form-control" required>
-                        <option value="none" selected disabled hidden>
-                            Rating
-                        </option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
+                    <div class="stars">
+                        <input class="star star-5" id="star-5" type="radio" name="star" value = "5">
+                        <label class="star star-5" for="star-5">5</label></input>
+                        <input class="star star-4" id="star-4" type="radio" name="star" value = "4">
+                        <label class="star star-4" for="star-4">4</label></input>
+                        <input class="star star-3" id="star-3" type="radio" name="star" value = "3">
+                        <label class="star star-3" for="star-3">3</label></input>
+                        <input class="star star-2" id="star-2" type="radio" name="star" value = "2">
+                        <label class="star star-2" for="star-2">2</label></input>
+                        <input class="star star-1" id="star-1" type="radio" name="star" value = "1">
+                        <label class="star star-1" for="star-1">1</label></input>
+                    </div>
                 <div class="form-group col-sm-7">
-                    <textarea id="review" name="review" class="form-control" rows="1"
-                        required>Say something..</textarea>
+                    <textarea id="review" name="review" class="form-control" rows="2"
+                        placeholder= "Review here..."required></textarea>
                 </div>
             </div>
             <button class="btn btn-success" type="submit">Submit here..</button>
         </form>
-
-        <h4 style="color: red;">{{ msg }}</h4>
-
         <br>
+        {%if error is defined%}
+            {%if error == 'duplicate review'%}
+            <div class="alert alert-danger" role="alert">
+                You have already reviewed this book!!
+            </div>
+            {%endif%}
+        {%endif%}
+
         <!-- REVIEW LIST -->
         <div id="userReviews">
             {% if reviews|length ==0 %}
