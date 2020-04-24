@@ -10,7 +10,7 @@ header {
     margin-bottom: 20px;
 }
 
-.container{
+.container {
     width: 70%;
     border-radius: 10px;
     padding: 20px 20px 20px 20px;
@@ -20,8 +20,25 @@ header {
     text-align: center;
 }
 
-#drop-down{
+#drop-down {
     padding: 10px 10px 10px 10px;
     margin: 10px;
     background-color: rgba(85, 41, 41, 0.726);
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    min-height: auto;
+    max-height: 600px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+th,
+td,
+table {
+    width: auto;
 }

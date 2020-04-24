@@ -4,6 +4,7 @@ from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, session, render_template, request, redirect
 from schema import *
+from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 # from sqlalchemy import create_engine
@@ -70,7 +71,7 @@ def register():
             return render_template('register.html', error=error)
 
         # checked all the possible errors, finally adding the user
-        pHash = generate_password_hash(password,"sha256")
+        pHash = generate_password_hash(password, "sha256")
         user = User(name=name, password=pHash)
         db.session.add(user)
         db.session.commit()
@@ -105,7 +106,7 @@ def is_authorised():
 
         # checking if regsitered and if so checking the password
         user = User.query.get(name)
-        if (user == None or not check_password_hash(user.password,password)):
+        if (user == None or not check_password_hash(user.password, password)):
             error = "Invalid credentials"
             return render_template('register.html', error=error)
         else:
@@ -124,3 +125,34 @@ def logout():
             session.pop("USERNAME", None)
             session.pop("logged_in", None)
             return render_template("register.html")
+
+
+@app.route("/search", methods=["POST", "GET"])
+def search():
+    if request.method == "POST":
+        keyWord = request.form.get("key")
+        attribute = request.form.get("category")
+        print(keyWord, attribute)
+        return render_template("user_home.html", list=get_books(keyWord, attribute))
+    if request.method == "GET":
+        # keyWord = request.key
+        print(request)
+        return render_template("user_home.html")
+
+
+def get_books(key, attribute):
+    if attribute == "Title":
+        print('in title')
+        books = Book.query.filter(or_(Book.title.like("%{}%".format(key)))).all()
+    elif attribute == "Author":
+        print('in author')
+        books = Book.query.filter(or_(Book.author.like("%{}%".format(key)))).all()
+    elif attribute == "Year":
+        print('in year')
+        books = Book.query.filter(or_(Book.year.like("%{}%".format(key)))).all()
+    else:
+        print('in else')
+        books = Book.query.filter(or_(Book.title.like(
+            "%{}%".format(key)), Book.author.like("%{}%".format(key)), Book.year.like("%{}%".format(key)))).all()
+    print(len(books))
+    return books
