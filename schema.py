@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import ForeignKey,PrimaryKeyConstraint
 
 db = SQLAlchemy()
 
@@ -18,12 +19,11 @@ class Book(db.Model):
 
 class Review(db.Model):
     __tablename__ = "REVIEWS"
-    __table_args__ = (
-        db.PrimaryKeyConstraint('isbn', 'name'),
-        {},
-    )
-    isbn = db.Column(db.String)
-    name = db.Column(db.String)
-    review = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
+    isbn = db.Column(db.String, ForeignKey("BOOKS.isbn"))
+    name = db.Column(db.String, ForeignKey("USERS.name"))
+    review = db.Column(db.String)
+    rating = db.Column(db.Integer)
     createTime = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    __table_args__ = (PrimaryKeyConstraint('isbn', 'name'),)
+
