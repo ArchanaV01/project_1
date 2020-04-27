@@ -140,6 +140,7 @@ def book_page(isbn):
         #redirecting to the bookpage with the reviews and bookdetails
         reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
         return  render_template("book_page.html", bookDetails = bookDetails, reviews=reviews)
+<<<<<<< HEAD
     else :
         book = Book.query.get(isbn)
         try:
@@ -165,4 +166,11 @@ def book_page(isbn):
             return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
 
 
+=======
+
+
+@app.route("/search")
+def search():
+    return render_template("user_home.html")
+>>>>>>> master
 
