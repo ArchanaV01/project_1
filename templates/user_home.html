@@ -17,50 +17,81 @@
             <a class="navbar-brand">BookViewer</a>
             <h4>{{name}}</h4>
             <form action="{{url_for('register')}}">
-                <button type="submit" class="logout_button" value="logout_now">Logout</button>
+                <button type="submit" class="btn btn-outline-light float-right" value="logout_now">Logout</button>
             </form>
         </nav>
     </header>
+    <div class="card container" style="background-color: rgba(56, 0, 0, 0.829); width: 70%; margin-bottom: 30px;">
+        <div class="card-header" style="font-style: italic;">
+            <h4>Reading is like a conversation with the finest people of past centuries</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">What do you want to read next??</h5>
+            <p class="card-text">Look out for best books of the year: <a href="https://www.goodreads.com/choiceawards/best-books-2019">here</a> </p>
+
+        </div>
+    </div>
     <div class="container">
-        <form class="form-inline text-center">
+        <form class="form-inline text-center" action="{{url_for('search')}}" method="POST">
             <div style="width: 30%; text-align: left;">
                 <h4>Search for a book</h4>
             </div>
-            <div style="width: 30%;" >
-                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search">
+            <div style="width: 30%;">
+                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key" pattern="{3,}">
             </div>
             <div style="width: 10%;">
             </div>
-            <div style="width: 15%;" >
-                <div class="dropdown float-none" style="width: 10%;">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Search by
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Title</a>
-                        <a class="dropdown-item" href="#">Author</a>
-                        <a class="dropdown-item" href="#">Year</a>
-                    </div>
-                </div>
-                <!-- <div style="width: 10%;" >
-                    <button class="btn btn-outline-light" type="submit">Search</button>
-                </div> -->
+            <div style="width: 15%;">
+                <select id="rating" name="category" class="form-control" required>
+                    <option value="none" selected disabled hidden>
+                        Select by
+                    </option>
+                    <option value="None">None</option>
+                    <option value="Title">Title</option>
+                    <option value="Author">Author</option>
+                    <option value="Year">Year</option>
+                </select>
             </div>
-            <div style="width: 15%;" >
+            <div style="width: 15%;">
                 <button class="btn btn-outline-light float-right" type="submit">Search</button>
             </div>
         </form>
+    </div><br><br><br>{% if list|length > 0 %}
+    <div>
+        <h2 style="float: none; text-align: center;">Search Results</h2>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <div class="table-wrapper-scroll-y my-custom-scrollbar container">
+        <table class="table table-bordered table-striped mb-0" style="background-color:rgba(56, 0, 0, 0.829)">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-md-auto">#</th>
+                    <th scope="col" class="col-md-auto">Title</th>
+                    <th scope="col" class="col-md-auto">Author</th>
+                    <th scope="col" class="col-md-auto">Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%set counter = 1%} {%for each_book in list%} {% set counter = counter + 1 %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>
+                        <a href='/book_page/{{each_book.isbn}}'>{{each_book.title}}</a>
+                    </td>
+                    <td>{{each_book.author}}</td>
+                    <td>{{each_book.year}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    {% endif %} {% if list is defined and list|length == 0 %}
+    <div>
+        <h2 style="float: none; text-align: center;">No Search Results</h2>
+    </div>
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 
 </html>
