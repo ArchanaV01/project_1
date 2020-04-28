@@ -16,8 +16,8 @@
     </header>
 
     <section class="container">
-        <!-- <h3>Not a user?</h3><br> -->
-        <h3>Login</h3>
+        <h3>{{ msg }}</h3>
+        <h3>Register/Login</h3>
         <!-- Invalid Credentials - Alert Message -->
         {%if error is defined%}
         {%if error == 'Empty credentials'%}
@@ -29,14 +29,6 @@
         {%if error == 'Weak Password'%}
         <div class="alert alert-danger" role="alert">
             Weak Password!! <br>
-            <!-- A Strong password should have the following characters: <br>
-            <ul>
-                <li>Minimum length of 6 characters</li>
-                <li>Atleast one capital letter</li>
-                <li>Atleast one small letter</li>
-                <li>Atleast one digit</li>
-                <li>Atleast one of '$', '@', '_'</li>
-            </ul> -->
         </div>
         {%endif%}
         {%if error == 'Invalid credentials'%}

@@ -16,8 +16,8 @@
         <nav class="navbar navbar-light" style="background-color:rgb(56, 0, 0)">
             <a class="navbar-brand">BookViewer</a>
             <h4>{{name}}</h4>
-            <form action="{{url_for('register')}}">
-                <button type="submit" class="btn btn-outline-light float-right" value="logout_now">Logout</button>
+            <form action="{{url_for('logout')}}" method="POST">
+                <button type="submit" class="logout_button" value="logout_now">Logout</button>
             </form>
         </nav>
     </header>
@@ -37,7 +37,7 @@
                 <h4>Search for a book</h4>
             </div>
             <div style="width: 30%;">
-                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key" pattern="{3,}">
+                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key">
             </div>
             <div style="width: 10%;">
             </div>
@@ -87,6 +87,7 @@
     {% endif %} {% if list is defined and list|length == 0 %}
     <div>
         <h2 style="float: none; text-align: center;">No Search Results</h2>
+        <h3>{{ msg}}</h3>
     </div>
     {% endif %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

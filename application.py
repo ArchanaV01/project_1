@@ -7,6 +7,8 @@ from schema import *
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+from sqlalchemy.orm import class_mapper
+from sqlalchemy import and_
 # from sqlalchemy import create_engine
 # from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -111,7 +113,7 @@ def is_authorised():
             return render_template('register.html', error=error)
         else:
             session['logged_in'] = True
-            session["USERNAME"] = user
+            session["USERNAME"] = user.name
             return render_template('user_home.html', name=user.name)
     # redirecting to register page if /auth is directly accessed
     if request.method == "GET":
@@ -121,10 +123,9 @@ def is_authorised():
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
     if request.method == "POST":
-        if (request.form('logout_button') == 'logout_now'):
-            session.pop("USERNAME", None)
-            session.pop("logged_in", None)
-            return render_template("register.html")
+        session.pop("USERNAME", None)
+        session.pop("logged_in", None)
+        return render_template("register.html")
 
 
 @app.route("/search", methods=["POST", "GET"])
@@ -156,3 +157,43 @@ def get_books(key, attribute):
             "%{}%".format(key)), Book.author.like("%{}%".format(key)), Book.year.like("%{}%".format(key)))).all()
     print(len(books))
     return books
+
+
+
+@app.route("/book_page/<isbn>",methods=["GET","POST"])
+def book_page(isbn):
+    if request.method == "GET":
+        #checking if user session is already present, if not redirecting to login page
+        if not 'USERNAME' in session:
+            return render_template("register.html", msg="Please login first")
+        bookDetails = Book.query.get(isbn)
+        #checking if the isbn is valid or not
+        if bookDetails is None:
+            return render_template("user_home.html", msg = "Invalid ISBN number")
+        #redirecting to the bookpage with the reviews and bookdetails
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        return  render_template("book_page.html", bookDetails = bookDetails, reviews=reviews)
+    else :
+        book = Book.query.get(isbn)
+        try:
+            rating = request.form["star"]
+        except:
+            rating = 0
+        review = request.form["review"]
+        name = session['USERNAME']
+        #creating a review object
+        user = Review(isbn=isbn, name=name, review=review, rating=rating)
+        check = Review.query.filter(and_(Review.name==name, Review.isbn==isbn)).all()
+        #checking whether the user has already reviewed the book
+        if not check :
+            #adding the user's review to the data base
+            db.session.add(user)
+            db.session.commit()
+            reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+            return render_template("book_page.html", bookDetails=book, reviews=reviews)
+        else:
+            #throwing an error saying that the user had already provided the review
+            error = "duplicate review"
+            reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+            return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
+

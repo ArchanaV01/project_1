@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.1.0/darkly/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/book_page.css')}}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-light" style="background-color:rgb(56, 0, 0)">
+            <a class="navbar-brand">BookViewer</a>
+            <h4>{{ session['USERNAME'] }}</h4>
+            <form action="{{url_for('search')}}" method="GET">
+                <button type="submit" class="search" value="search">Search</button>
+            </form>
+            <form action="{{url_for('logout')}}" method="POST">
+                <button type="submit" class="logout_button" value="logout_now">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="http://covers.openlibrary.org/b/isbn/{{bookDetails.isbn}}-M.jpg" width="170px ">
+            </div>
+            <div class="col-sm-5">
+                <h1 style="font-size: 45px; font-weight: bolder;">{{bookDetails.title}}</h1>
+                <br>
+                <h4>Author: {{bookDetails.author}}</h4>
+                <h4>Published: {{bookDetails.year}}</h4>
+                <h4>ISBN: {{bookDetails.isbn}}</h4>
+            </div>
+        </div>
+
+        <div class="dropdown-divider"></div><br>
+        <h4 class="alert alert-warning">Users Reviews</h4>
+        <h3>Give your rating, review here...</h3>
+        <form method="POST" class="form-border">
+            <div class="form-row">
+                    <div class="stars">
+                        <input class="star star-5" id="star-5" type="radio" name="star" value = "5">
+                        <label class="star star-5" for="star-5">5</label></input>
+                        <input class="star star-4" id="star-4" type="radio" name="star" value = "4">
+                        <label class="star star-4" for="star-4">4</label></input>
+                        <input class="star star-3" id="star-3" type="radio" name="star" value = "3">
+                        <label class="star star-3" for="star-3">3</label></input>
+                        <input class="star star-2" id="star-2" type="radio" name="star" value = "2">
+                        <label class="star star-2" for="star-2">2</label></input>
+                        <input class="star star-1" id="star-1" type="radio" name="star" value = "1">
+                        <label class="star star-1" for="star-1">1</label></input>
+                    </div>
+                <div class="form-group col-sm-7">
+                    <textarea id="review" name="review" class="form-control" rows="2"
+                        placeholder= "Review here..."required></textarea>
+                </div>
+            </div>
+            <button class="btn btn-success" type="submit">Submit here..</button>
+        </form>
+        <br>
+        {%if error is defined%}
+            {%if error == 'duplicate review'%}
+            <div class="alert alert-danger" role="alert">
+                You have already reviewed this book!!
+            </div>
+            {%endif%}
+        {%endif%}
+
+        <!-- REVIEW LIST -->
+        <div id="userReviews">
+            {% if reviews|length ==0 %}
+            <h2>No reviews yet</h2>
+            {% endif %}
+            {% for review in reviews %}
+            <div class="list-group">
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1" style="color:burlywood"> "{{review.review}}" - {{review.name}}</h5>
+                        <small>{{review.createTime}}</small>
+                    </div>
+                    <h5 class="mb-1">Rated: {{review.rating}}</h5>
+                </div>
+                <div class="dropdown-divider"></div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
