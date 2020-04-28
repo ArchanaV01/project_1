@@ -15,7 +15,7 @@
         <!-- <h1>Welcome to BookViewer</h1><br> -->
         <nav class="navbar navbar-light" style="background-color:rgb(56, 0, 0)">
             <a class="navbar-brand">BookViewer</a>
-            <h4>{{name}}</h4>
+            <h4>{{session["USERNAME"]}}</h4>
             <form action="{{url_for('logout')}}" method="POST">
                 <button type="submit" class="logout_button" value="logout_now">Logout</button>
             </form>
@@ -37,7 +37,7 @@
                 <h4>Search for a book</h4>
             </div>
             <div style="width: 30%;">
-                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key">
+                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key" required>
             </div>
             <div style="width: 10%;">
             </div>
@@ -56,6 +56,9 @@
                 <button class="btn btn-outline-light float-right" type="submit">Search</button>
             </div>
         </form>
+        <div style="margin: 15px;">
+            <h3>{{ msg}}</h3>
+        </div>
     </div><br><br><br>{% if list|length > 0 %}
     <div>
         <h2 style="float: none; text-align: center;">Search Results</h2>
