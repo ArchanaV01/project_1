@@ -2,7 +2,7 @@ import os
 import re
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, session, render_template, request, redirect,jsonify 
 from schema import *
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
@@ -197,3 +197,36 @@ def book_page(isbn):
             reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
             return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
 
+
+@app.route("/api/book/<isbn>", methods=["GET"])
+def api_book(isbn):
+    print(isbn)
+    bookDetails = Book.query.get(isbn)
+    if bookDetails is None:
+        result = {
+            "status":404,
+            "error":"Invalid ISBN. Book not found"
+        }
+        return jsonify(result)
+    else:
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        reviewDetails=[]
+        for r in reviews:
+            details = {
+                'name': r.name,
+                'review':r.review,
+                'rating':r.rating,
+                'createTime':r.createTime
+            }
+            reviewDetails.append(details)
+        result = {
+            "status":200,
+            "title":bookDetails.title,
+            "isbn":bookDetails.isbn,
+            "author":bookDetails.author,
+            "year":bookDetails.year,
+            "reviews":reviewDetails
+        }
+        # print(result)
+        return jsonify(result)
+    

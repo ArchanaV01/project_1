@@ -6,13 +6,13 @@
         {{name}} Home page
     </title>
     <meta name="viewport" content="width=device-width">
+    <script src="{{url_for('static', filename='js/home.js') }}"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{url_for('static',filename='css/user_home.css')}}">
 </head>
 
 <body>
     <header>
-        <!-- <h1>Welcome to BookViewer</h1><br> -->
         <nav class="navbar navbar-light" style="background-color:rgb(56, 0, 0)">
             <a class="navbar-brand">BookViewer</a>
             <h4>{{session["USERNAME"]}}</h4>
@@ -21,28 +21,19 @@
             </form>
         </nav>
     </header>
-    <div class="card container" style="background-color: rgba(56, 0, 0, 0.829); width: 70%; margin-bottom: 30px;">
-        <div class="card-header" style="font-style: italic;">
-            <h4>Reading is like a conversation with the finest people of past centuries</h4>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">What do you want to read next??</h5>
-            <p class="card-text">Look out for best books of the year: <a href="https://www.goodreads.com/choiceawards/best-books-2019">here</a> </p>
-
-        </div>
-    </div>
     <div class="container">
         <form class="form-inline text-center" action="{{url_for('search')}}" method="POST">
             <div style="width: 30%; text-align: left;">
                 <h4>Search for a book</h4>
             </div>
             <div style="width: 30%;">
-                <input class="form-control mr-sm-2 float-right" type="search" placeholder="Type here" aria-label="Search" name="key" required>
+                <input class="form-control mr-sm-2 float-right" type="search" id="key" placeholder="Type here"
+                    aria-label="Search" name="key" required>
             </div>
             <div style="width: 10%;">
             </div>
             <div style="width: 15%;">
-                <select id="rating" name="category" class="form-control" required>
+                <select name="category" id="category" class="form-control" required>
                     <option value="none" selected disabled hidden>
                         Select by
                     </option>
@@ -53,49 +44,113 @@
                 </select>
             </div>
             <div style="width: 15%;">
-                <button class="btn btn-outline-light float-right" type="submit">Search</button>
+                <button class="btn btn-outline-light float-right" id="submit" type="submit">Search</button>
             </div>
         </form>
         <div style="margin: 15px;">
             <h3>{{ msg}}</h3>
         </div>
-    </div><br><br><br>{% if list|length > 0 %}
+    </div>
+    <br><br>
     <div>
-        <h2 style="float: none; text-align: center;">Search Results</h2>
+        <div class="left_container" style="float: left;">
+            <!-- Search Results -->
+            {% if list|length > 0 %}
+            <div>
+                <h2 style="float: none; text-align: center;">Search Results</h2>
+            </div>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col-md-auto">Title</th>
+                            <th scope="col" class="col-md-auto">Author</th>
+                            <th scope="col" class="col-md-auto">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for each_book in list%}
+                        <tr>
+                            <td>
+                                <a id="bookURL" onclick='clickonBook(event)'
+                                    href='/book/{{each_book.isbn}}'>{{each_book.title}}</a>
+                            </td>
+                            <td>{{each_book.author}}</td>
+                            <td>{{each_book.year}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %} {% if list is defined and list|length == 0 %}
+            <div>
+                <h2 style="float: none; text-align: center;">No Search Results</h2>
+                <h3>{{ msg}}</h3>
+            </div>
+            {% endif %}
+        </div>
+        <div class="right_container" style="float: right;">
+            <!-- Book -->
+            <div id="result">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img src="" id="myimg" width="130px">
+                    </div>
+                    <div class="col-sm-5">
+                        <h2 id="title"> </h2>
+                        <h5 id="author"></h5>
+                        <h5 id="year"></h5>
+                        <h5 id="isbn"></h5>
+                    </div>
+                </div>
+                <br>
+                <!-- <h5 class="alert alert-warning">Users Reviews</h5> -->
+                <div id="reviewSubmit">
+                    <h5>Give your rating, review here...</h5>
+                    <form class="form-border">
+                        <div class="form-row">
+                            <div class="stars">
+                                <input class="star star-5" id="star-5" type="radio" name="star" value="5">
+                                <label class="star star-5" for="star-5">5</label></input>
+                                <input class="star star-4" id="star-4" type="radio" name="star" value="4">
+                                <label class="star star-4" for="star-4">4</label></input>
+                                <input class="star star-3" id="star-3" type="radio" name="star" value="3">
+                                <label class="star star-3" for="star-3">3</label></input>
+                                <input class="star star-2" id="star-2" type="radio" name="star" value="2">
+                                <label class="star star-2" for="star-2">2</label></input>
+                                <input class="star star-1" id="star-1" type="radio" name="star" value="1">
+                                <label class="star star-1" for="star-1">1</label></input>
+                            </div>
+                            <div class="form-group col-sm-7" style="padding-left: 15px;">
+                                <textarea id="review" name="review" class="form-control" rows="1"
+                                    placeholder="Review here..." required></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" type="submit">Submit here..</button>
+                    </form><br>
+                </div>
+
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <ul id="review_scroll">
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="table-wrapper-scroll-y my-custom-scrollbar container">
-        <table class="table table-bordered table-striped mb-0" style="background-color:rgba(56, 0, 0, 0.829)">
-            <thead>
-                <tr>
-                    <th scope="col" class="col-md-auto">#</th>
-                    <th scope="col" class="col-md-auto">Title</th>
-                    <th scope="col" class="col-md-auto">Author</th>
-                    <th scope="col" class="col-md-auto">Year</th>
-                </tr>
-            </thead>
-            <tbody>
-                {%set counter = 1%} {%for each_book in list%} {% set counter = counter + 1 %}
-                <tr>
-                    <td>{{loop.index}}</td>
-                    <td>
-                        <a href='/book_page/{{each_book.isbn}}'>{{each_book.title}}</a>
-                    </td>
-                    <td>{{each_book.author}}</td>
-                    <td>{{each_book.year}}</td>
-                </tr>
-                {%endfor%}
-            </tbody>
-        </table>
-    </div>
-    {% endif %} {% if list is defined and list|length == 0 %}
-    <div>
-        <h2 style="float: none; text-align: center;">No Search Results</h2>
-        <h3>{{ msg}}</h3>
-    </div>
-    {% endif %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <br><br><br>
+
+    <br>
+
+
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script> -->
 </body>
 
 </html>
