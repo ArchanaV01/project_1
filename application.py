@@ -2,7 +2,7 @@ import os
 import re
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, session, render_template, request, redirect, jsonify
 from schema import *
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
@@ -143,16 +143,16 @@ def search():
 
 def get_books(key, attribute):
     if attribute == "Title":
-        print('in title')
+        # print('in title')
         books = Book.query.filter(or_(Book.title.like("%{}%".format(key)))).all()
     elif attribute == "Author":
-        print('in author')
+        # print('in author')
         books = Book.query.filter(or_(Book.author.like("%{}%".format(key)))).all()
     elif attribute == "Year":
-        print('in year')
+        # print('in year')
         books = Book.query.filter(or_(Book.year.like("%{}%".format(key)))).all()
     else:
-        print('in else')
+        # print('in else')
         books = Book.query.filter(or_(Book.title.like(
             "%{}%".format(key)), Book.author.like("%{}%".format(key)), Book.year.like("%{}%".format(key)))).all()
     print(len(books))
@@ -197,3 +197,21 @@ def book_page(isbn):
             reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
             return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
 
+@app.route("/api/search", methods=["GET"])
+def api_search():
+    keyWord = request.args.get("key")
+    attribute = request.args.get("category")
+    print(keyWord, attribute)
+    bookList = get_books(keyWord, attribute)
+    if (len(bookList) > 0):
+        books_json = []
+        for eachBook in bookList:
+            book = {}
+            # book['status'] = 200
+            book['isbn'] = eachBook.isbn
+            book['title'] = eachBook.title
+            book['author'] = eachBook.author
+            books_json.append(book)
+        return jsonify(books_json),200
+    else:
+        return jsonify({"error":"No Search Results"}), 404
