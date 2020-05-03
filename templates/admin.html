@@ -15,13 +15,14 @@
         <!-- <h1>Welcome to BookViewer!!</h1><br> -->
         <h3>Admin</h3>
     </header>
-    <section id = "centerSection">
+    <section id="centerSection">
         <h3>User List:</h3>
-        <table class="table table-hover" id = "userList">
+        <table class="table table-hover" id="userList">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
+                    <!-- <th scope="col">Email</th> -->
                     <th scope="col">Password</th>
                     <th scope="col">Created At</th>
                 </tr>
@@ -33,6 +34,7 @@
                 <tr>
                     <th scope="row">{{loop.index}}</th>
                     <td>{{user.name}}</td>
+                    <!-- <td>{{user.email}}</td> -->
                     <td>{{user.password}}</td>
                     <td>{{user.created_at}}</td>
                 </tr>

@@ -50,10 +50,11 @@
         <!-- Form for user registration -->
         <form id="register_form" action="{{url_for('register')}}" method="POST">
             <input type="text" name="name" placeholder="User Name" required><br>
-            <input type="password" name="password" aria-describedby="pswdHelp" placeholder="Password"
+            <input type="password" name="password" id="password" aria-describedby="pswdHelp"
+                placeholder="Enter Password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.*\s).{8,16}$"
                 title="Password length should be in between 8 and 16 with atleast one lowercase letter, one upper case letter, one digit and a special character"
                 required>
-            <!-- <input type="password" name="password" placeholder="Password" required><br> -->
+            <p><span id="error"></span></p>
             <button type="submit" class="button_1">Register</button>
             <button type="submit" formaction="{{url_for('is_authorised')}}" class="button_1 ">Login</button>
         </form>
