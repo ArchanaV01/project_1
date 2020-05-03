@@ -21,7 +21,7 @@
             </form>
         </nav>
     </header>
-    <div class="card container" style="background-color: rgba(56, 0, 0, 0.829); width: 70%; margin-bottom: 30px;">
+    <div class="card container" id="Card" style="background-color: rgba(56, 0, 0, 0.829); width: 70%; margin-bottom: 30px; visibility: visible;">
         <div class="card-header" style="font-style: italic;">
             <h4>Reading is like a conversation with the finest people of past centuries</h4>
         </div>
@@ -82,11 +82,56 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script src="{{url_for('static',filename='js/user_home.js')}}"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <div class="right_container" style="float: right;">
+            <!-- Book -->
+            <div id="result">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img src="" id="myimg" width="130px">
+                    </div>
+                    <div class="col-sm-5">
+                        <h2 id="title"> </h2>
+                        <h5 id="author"></h5>
+                        <h5 id="year"></h5>
+                        <h5 id="isbn"></h5>
+                    </div>
+                </div>
+                <br>
+                <!-- <h5 class="alert alert-warning">Users Reviews</h5> -->
+                <div id="reviewSubmit">
+                    <h5>Give your rating, review here...</h5>
+                    <form class="form-border">
+                        <div class="form-row">
+                            <div class="stars">
+                                <input class="star star-5" id="star-5" type="radio" name="star" value="5">
+                                <label class="star star-5" for="star-5">5</label></input>
+                                <input class="star star-4" id="star-4" type="radio" name="star" value="4">
+                                <label class="star star-4" for="star-4">4</label></input>
+                                <input class="star star-3" id="star-3" type="radio" name="star" value="3">
+                                <label class="star star-3" for="star-3">3</label></input>
+                                <input class="star star-2" id="star-2" type="radio" name="star" value="2">
+                                <label class="star star-2" for="star-2">2</label></input>
+                                <input class="star star-1" id="star-1" type="radio" name="star" value="1">
+                                <label class="star star-1" for="star-1">1</label></input>
+                            </div>
+                            <div class="form-group col-sm-7" style="padding-left: 15px;">
+                                <textarea id="review" name="review" class="form-control" rows="1" placeholder="Review here..." required></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" type="submit">Submit here..</button>
+                    </form><br>
+                </div>
+
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <ul id="review_scroll">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script src="{{url_for('static',filename='js/user_home.js')}}"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 
 </html>
