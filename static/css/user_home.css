@@ -20,6 +20,27 @@ header {
     text-align: center;
 }
 
+.left_container {
+    float: left;
+    width: 45%;
+    border-radius: 10px;
+    margin-left: 25px;
+    padding: 20px 20px 20px 20px;
+    background-color: rgba(56, 0, 0, 0.829);
+    text-align: center;
+    visibility: hidden;
+}
+
+.right_container {
+    float: right;
+    width: 45%;
+    border-radius: 10px;
+    margin-right: 25px;
+    padding: 20px 20px 20px 20px;
+    background-color: rgba(56, 0, 0, 0.829);
+    visibility: hidden;
+}
+
 #drop-down {
     padding: 10px 10px 10px 10px;
     margin: 10px;
