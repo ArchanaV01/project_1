@@ -1,20 +1,22 @@
+var global_isbn;
+
 function searchResults(event) {
     // document.querySelector("#Card").style.visibility = "hidden";
     document.querySelector(".right_container").style.visibility = "hidden";
     event.preventDefault();
     const key = document.getElementById("key").value;
     const category = document.getElementById("category").value;
-    var req = new XMLHttpRequest();
+    var request = new XMLHttpRequest();
     var url = "/api/search?key=" + key + "&category=" + category;
     console.log(url);
-    req.open("GET", url);
-    req.send();
-    req.onload = function() {
+    request.open("GET", url);
+    request.send();
+    request.onload = function() {
         document.querySelector(".left_container").style.visibility = "visible";
-        if (req.status === 200) {
+        if (request.status === 200) {
 
             document.querySelector("#resultsTable").style.visibility = "visible";
-            var books = JSON.parse(req.responseText);
+            var books = JSON.parse(request.responseText);
             var content = "";
             for (index in books) {
                 each_book = books[index];
@@ -52,6 +54,7 @@ function clickonBook(event) {
             document.querySelector('#author').innerHTML = "Author: " + data['author'];
             document.querySelector('#year').innerHTML = "Year: " + data['year'];
             document.querySelector('#isbn').innerHTML = "ISBN: " + data['isbn'];
+            global_isbn = data['isbn'];
             if (data['reviews'].length == 0) {
                 document.querySelector("#review_scroll").innerHTML = "No Reviews given";
             } else {
@@ -67,3 +70,45 @@ function clickonBook(event) {
         }
     }
 };
+
+function review_submit(event){
+    event.preventDefault();
+    console.log(event);
+    const rating = document.getElementsByName("star")
+    const isbn = global_isbn;
+    const review = document.getElementById("review").value;
+    var request = new XMLHttpRequest();
+    var url = "/api/submit_review?isbn="+ isbn +"&star=" + rating + "&review=" + review;
+    console.log(url);
+    request.open('GET', url);
+    console.log("request open");
+    // Callback function for when request completes
+    request.send();
+    request.onload = () => {
+        console.log("request loaded");
+        // Extract JSON data from request
+        const data = JSON.parse(request.responseText);
+        // Update the result div
+        if (data['status'] == 200) {
+            document.querySelector(".right_container").style.visibility = "visible";
+            document.getElementById("myimg").src = "http://covers.openlibrary.org/b/isbn/" + data['isbn'] + "-M.jpg";
+            console.log(document.getElementById("myimg").src);
+            document.querySelector('#title').innerHTML = data['title'];
+            document.querySelector('#author').innerHTML = "Author: " + data['author'];
+            document.querySelector('#year').innerHTML = "Year: " + data['year'];
+            document.querySelector('#isbn').innerHTML = "ISBN: " + data['isbn'];
+            if (data['reviews'].length == 0) {
+                document.querySelector("#review_scroll").innerHTML = "No Reviews given";
+            } else {
+                var str = ''
+                data['reviews'].forEach(function(r) {
+                    str += '<li>' + "'" + r['review'] + "' -" + r['name'] + ".   Rated: " + r['rating'] + '</li>';
+                });
+                document.querySelector("#review_scroll").innerHTML = str;
+            }
+        } else {
+            document.querySelector(".right_container").style.visibility = "visible";
+            alert("You have already submitted the review for this book.")
+        }
+    }
+}

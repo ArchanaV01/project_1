@@ -248,3 +248,47 @@ def api_book(isbn):
         }
         # print(result)
         return jsonify(result)
+
+
+@app.route("/api/submit_review",methods=["GET"])
+def api_submitreview():
+    isbn = request.args.get("isbn")
+    rating = request.args.get("star")
+    review = request.args.get("review")
+    print(rating, review, isbn)
+    book = Book.query.get(isbn)
+    name = session['USERNAME']
+    #creating a review object
+    user = Review(isbn=isbn, name=name, review=review, rating=rating)
+    check = Review.query.filter(and_(Review.name==name, Review.isbn==isbn)).all()
+    print(name, isbn)
+    #checking whether the user has already reviewed the book
+    if check:
+        out = {
+            'status': 404,
+            'error' : 'Duplicate review'
+        }
+        return jsonify(out)
+    else:
+        db.session.add(user)
+        db.session.commit()
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        reviewDetails=[]
+        for r in reviews:
+            details = {
+                'name': r.name,
+                'review':r.review,
+                'rating':r.rating,
+                'createTime':r.createTime
+            }
+            reviewDetails.append(details)
+        out = {
+            "status":200,
+            "title":book.title,
+            "isbn":book.isbn,
+            "author":book.author,
+            "year":book.year,
+            "reviews":reviewDetails
+        }
+        # print(out)
+        return jsonify(out)
