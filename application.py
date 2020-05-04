@@ -2,7 +2,7 @@ import os
 import re
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, session, render_template, request, redirect, jsonify
 from schema import *
 from sqlalchemy import or_
 from flask_sqlalchemy import SQLAlchemy
@@ -143,16 +143,16 @@ def search():
 
 def get_books(key, attribute):
     if attribute == "Title":
-        print('in title')
+        # print('in title')
         books = Book.query.filter(or_(Book.title.like("%{}%".format(key)))).all()
     elif attribute == "Author":
-        print('in author')
+        # print('in author')
         books = Book.query.filter(or_(Book.author.like("%{}%".format(key)))).all()
     elif attribute == "Year":
-        print('in year')
+        # print('in year')
         books = Book.query.filter(or_(Book.year.like("%{}%".format(key)))).all()
     else:
-        print('in else')
+        # print('in else')
         books = Book.query.filter(or_(Book.title.like(
             "%{}%".format(key)), Book.author.like("%{}%".format(key)), Book.year.like("%{}%".format(key)))).all()
     print(len(books))
@@ -197,3 +197,98 @@ def book_page(isbn):
             reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
             return render_template("book_page.html", error=error, bookDetails=book, reviews=reviews)
 
+@app.route("/api/search", methods=["GET"])
+def api_search():
+    keyWord = request.args.get("key")
+    attribute = request.args.get("category")
+    print(keyWord, attribute)
+    bookList = get_books(keyWord, attribute)
+    if (len(bookList) > 0):
+        books_json = []
+        for eachBook in bookList:
+            book = {}
+            # book['status'] = 200
+            book['isbn'] = eachBook.isbn
+            book['title'] = eachBook.title
+            book['author'] = eachBook.author
+            book['year'] = eachBook.year
+            books_json.append(book)
+        return jsonify(books_json),200
+    else:
+        return jsonify({"error":"No Search Results"}), 404
+
+@app.route("/api/book/<isbn>", methods=["GET"])
+def api_book(isbn):
+    print(isbn)
+    bookDetails = Book.query.get(isbn)
+    if bookDetails is None:
+        result = {
+            "status":404,
+            "error":"Invalid ISBN. Book not found"
+        }
+        return jsonify(result)
+    else:
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        reviewDetails=[]
+        for r in reviews:
+            details = {
+                'name': r.name,
+                'review':r.review,
+                'rating':r.rating,
+                'createTime':r.createTime
+            }
+            reviewDetails.append(details)
+        result = {
+            "status":200,
+            "title":bookDetails.title,
+            "isbn":bookDetails.isbn,
+            "author":bookDetails.author,
+            "year":bookDetails.year,
+            "reviews":reviewDetails
+        }
+        # print(result)
+        return jsonify(result)
+
+
+@app.route("/api/submit_review",methods=["GET"])
+def api_submitreview():
+    isbn = request.args.get("isbn")
+    rating = request.args.get("star")
+    review = request.args.get("review")
+    print(rating, review, isbn)
+    book = Book.query.get(isbn)
+    name = session['USERNAME']
+    #creating a review object
+    user = Review(isbn=isbn, name=name, review=review, rating=rating)
+    check = Review.query.filter(and_(Review.name==name, Review.isbn==isbn)).all()
+    print(name, isbn)
+    #checking whether the user has already reviewed the book
+    if check:
+        out = {
+            'status': 404,
+            'error' : 'Duplicate review'
+        }
+        return jsonify(out)
+    else:
+        db.session.add(user)
+        db.session.commit()
+        reviews = Review.query.filter_by(isbn=isbn).order_by(Review.createTime.desc()).all()
+        reviewDetails=[]
+        for r in reviews:
+            details = {
+                'name': r.name,
+                'review':r.review,
+                'rating':r.rating,
+                'createTime':r.createTime
+            }
+            reviewDetails.append(details)
+        out = {
+            "status":200,
+            "title":book.title,
+            "isbn":book.isbn,
+            "author":book.author,
+            "year":book.year,
+            "reviews":reviewDetails
+        }
+        # print(out)
+        return jsonify(out)
